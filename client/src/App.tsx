@@ -2,23 +2,28 @@ import React from 'react';
 import logo from './logo.png';
 import './App.css';
 import {handleApiErrors} from "./lib/api-call";
-import {googleAnalytics, firebaseApp} from "./state/firebase";
+import {googleAnalytics} from "./state/firebase";
+import {authWithGoogle} from "./lib/login";
 
 function App() {
-  const firebase = firebaseApp;
-  const analytics = googleAnalytics
+  const analytics = googleAnalytics;
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <button onClick={() => sayHello()}>Click to do stuff</button>
+        <button id="access" onClick={() => access()}>Access</button>
       </header>
     </div>
   );
 
-  async function sayHello() {
+  async function access() {
+    const credential = await authWithGoogle();
+    await sayHello(credential?.user?.displayName || 'Buddy');
+  }
+
+  async function sayHello(name: string) {
     try{
-      const response = await fetch("/api/hello?name=user");
+      const response = await fetch(`/api/hello?name=${name}`);
       handleApiErrors(response, handleResponse);
     } catch (e) {
       console.error(e);
