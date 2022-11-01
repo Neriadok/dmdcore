@@ -24,7 +24,7 @@ function serveApp(app: Express) {
 function serveApi(app: Express) {
     app.use(express.json());
     const routePath = path.resolve(__dirname, 'endpoints').replace(/\\/gi, '/');
-    const endpoints = sync(path.resolve(routePath, '**/*.ts'));
+    const endpoints = sync(path.resolve(routePath, '**/*.ts').replace(/\\/gi, '/'));
     endpoints.forEach((endpoint) => useEndpoint(app, routePath, endpoint));
 }
 

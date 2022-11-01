@@ -5,7 +5,7 @@ import {resolve} from "path";
 sql(syncModels);
 
 async function syncModels() {
-    const route = resolve(process.cwd(), './server/entities/*.ts').replace(/\\/gi,'/')
+    const route = resolve(__dirname, '../server/entities/*.ts').replace(/\\/gi,'/')
     const models = sync(route);
     console.log(route, models);
     await Promise.all(models.map(syncModel));

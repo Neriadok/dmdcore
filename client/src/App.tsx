@@ -17,8 +17,8 @@ function App() {
   );
 
   async function access() {
-    const credential = await authWithGoogle();
-    await sayHello(credential?.user?.displayName || 'Buddy');
+    const user = await authWithGoogle();
+    await sayHello(user?.name || 'Buddy');
   }
 
   async function sayHello(name: string) {

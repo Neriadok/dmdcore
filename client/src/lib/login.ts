@@ -1,10 +1,11 @@
 import {browserSessionPersistence, getAuth, setPersistence, signInWithPopup, UserCredential} from "firebase/auth";
 import {firebaseApp} from "../state/firebase";
 import { GoogleAuthProvider } from "firebase/auth";
-import {authSubject, sessionSubject} from "../state/session";
+import {authSubject, sessionSubject, userSubject} from "../state/session";
+import {AppUser} from "../entities/app-user";
 
 
-export async function authWithGoogle(): Promise<UserCredential | null>{
+export async function authWithGoogle(): Promise<AppUser | null>{
     const provider = new GoogleAuthProvider();
     let oauth, credential = null;
     try {
@@ -18,5 +19,16 @@ export async function authWithGoogle(): Promise<UserCredential | null>{
     }
     sessionSubject.next(credential);
     authSubject.next(oauth || null);
-    return sessionSubject.getValue();
+    userSubject.next(credential && await getAppUser(credential));
+    return userSubject.getValue();
+}
+
+async function getAppUser({user}: UserCredential): Promise<AppUser>{
+    const response = await fetch(`/api/user`, {
+        method: 'POST',
+        body: JSON.stringify({uid: user.uid, name: user.displayName}),
+        headers: {"Content-Type": "application/json"}
+    });
+    return response.status === 200 ? response.json() : null;
+
 }
