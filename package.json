@@ -15,6 +15,7 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "cd client && npm ci && npm run build && cd .. && ts-node scripts/copy client/build dist/client/build",
     "build:server": "tsc --project .",
+    "db:sync": "ts-node ./scripts/db-sync.ts",
     "serve": "node dist/server",
     "jest": "jest",
     "cypress": "cypress",
@@ -35,9 +36,12 @@
   "bugs": {
     "url": "https://github.com/Neriadok/dmdcore/issues"
   },
-  "homepage": "https://github.com/Neriadok/dmdcore",
+  "homepage": "https://github.com/Neriadok/dmdcore/wiki",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "glob": "^8.0.3",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.25.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

@@ -4,6 +4,7 @@
     "module": "commonjs",
     "outDir": "./dist/server",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
