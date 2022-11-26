@@ -1,4 +1,6 @@
-{
+import { FirebaseOptions } from "firebase/app";
+
+export const firebaseOptions: FirebaseOptions = {
   "apiKey": "AIzaSyD6PnAlQN9-pR2Ch9gHenUHspUy7-ou8qs",
   "authDomain": "dmdcore-74810.firebaseapp.com",
   "projectId": "dmdcore-74810",
