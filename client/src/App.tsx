@@ -3,28 +3,21 @@ import './App.css';
 import { handleApiErrors } from "./lib/api-call";
 import { googleAnalytics } from "./state/firebase";
 import { authWithGoogle } from "./lib/login";
-import { Button, Container, AppBar, IconButton, Toolbar, Typography } from '@mui/material';
+import { Button, Container, AppBar, Toolbar, Typography } from '@mui/material';
 
 function App() {
     const analytics = googleAnalytics;
     return (
-        <main>
-            <AppBar position="static" color="inherit">
+        <main >
+            <AppBar position="static" color="transparent">
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                    </IconButton>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        DMD-Core
                     </Typography>
-                    <Button id="access" color="inherit" onClick={() => access()}>Access</Button>
+                    <Button id="access" color="primary" variant="text" onClick={() => access()}>Access</Button>
                 </Toolbar>
             </AppBar>
-            <Container>
+            <Container style={{textAlign: 'center'}}>
                     <img src={logo} className="App-logo" alt="logo" />
             </Container>
         </main>

@@ -7,7 +7,8 @@ export const themeOptions: ThemeOptions = {
         error: {main: "#eb4444"},
         warning: {main: "#eb9844"},
         info: {main: "#4498eb"},
-        success: {main: "#44eb98"}
+        success: {main: "#44eb98"},
+        
     }
 };
 
