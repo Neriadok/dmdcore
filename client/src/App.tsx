@@ -3,16 +3,31 @@ import './App.css';
 import { handleApiErrors } from "./lib/api-call";
 import { googleAnalytics } from "./state/firebase";
 import { authWithGoogle } from "./lib/login";
+import { Button, Container, AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 
 function App() {
     const analytics = googleAnalytics;
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <button id="access" onClick={() => access()}>Access</button>
-            </header>
-        </div>
+        <main>
+            <AppBar position="static" color="inherit">
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                    >
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    </Typography>
+                    <Button id="access" color="inherit" onClick={() => access()}>Access</Button>
+                </Toolbar>
+            </AppBar>
+            <Container>
+                    <img src={logo} className="App-logo" alt="logo" />
+            </Container>
+        </main>
     );
 
     async function access() {
