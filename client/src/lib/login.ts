@@ -23,6 +23,12 @@ export async function authWithGoogle(): Promise<AppUser | null>{
     return userSubject.getValue();
 }
 
+export async function logOut() {
+    sessionSubject.next(null);
+    authSubject.next(null);
+    userSubject.next(null);
+}
+
 async function getAppUser({user}: UserCredential): Promise<AppUser>{
     const response = await fetch(`/api/user`, {
         method: 'POST',

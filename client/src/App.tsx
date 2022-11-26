@@ -1,47 +1,38 @@
-import logo from './logo.png';
 import './App.css';
-import { handleApiErrors } from "./lib/api-call";
 import { googleAnalytics } from "./state/firebase";
 import { authWithGoogle } from "./lib/login";
-import { Button, Container, AppBar, Toolbar, Typography } from '@mui/material';
+import { Button, AppBar, Toolbar, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import Router from './pages/router';
+import { useState } from 'react';
+import { userSubject } from './state/session';
+import { skip } from 'rxjs';
 
 function App() {
     const analytics = googleAnalytics;
+    const navigate = useNavigate();
+    const [user, setUser] = useState(userSubject.value);
+    userSubject.pipe(skip(1)).subscribe((v) => setUser(v));
+
     return (
         <main >
-            <AppBar position="static" color="transparent">
+            <AppBar position="static" color="inherit">
                 <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={() => navigate("/")}>
                         DMD-Core
                     </Typography>
-                    <Button id="access" color="primary" variant="text" onClick={() => access()}>Access</Button>
+                    {
+                        user ? <Button id="profile" onClick={() => navigate("/profile")}>{user?.name || 'Anonymous'}</Button>
+                            : <Button id="access" color="primary" variant="text" onClick={() => access()}>Access</Button>
+                    }
                 </Toolbar>
             </AppBar>
-            <Container style={{textAlign: 'center'}}>
-                    <img src={logo} className="App-logo" alt="logo" />
-            </Container>
+            <Router></Router>
         </main>
     );
 
     async function access() {
-        const user = await authWithGoogle();
-        await sayHello(user?.name || 'Buddy');
-    }
-
-    async function sayHello(name: string) {
-        try {
-            const response = await fetch(`/api/hello?name=${name}`);
-            handleApiErrors(response, handleResponse);
-        } catch (e) {
-            console.error(e);
-            alert('Request error.')
-        }
-    }
-
-    async function handleResponse(response: Response) {
-        const body = await response.json();
-        alert(body?.message)
-
+        await authWithGoogle();
     }
 }
 
