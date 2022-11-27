@@ -1,40 +1,40 @@
-import {browserSessionPersistence, getAuth, setPersistence, signInWithPopup, UserCredential} from "firebase/auth";
-import {firebaseApp} from "../state/firebase";
-import { GoogleAuthProvider } from "firebase/auth";
-import {authSubject, sessionSubject, userSubject} from "../state/session";
-import {AppUser} from "../entities/app-user";
+import { GoogleAuthProvider, indexedDBLocalPersistence, OAuthCredential, setPersistence, signInWithCredential, signInWithPopup, signInWithRedirect, signOut, User, UserCredential } from "firebase/auth";
+import { auth, userSubject } from "../state/session";
+import { AppUser } from "../entities/app-user";
 
-
-export async function authWithGoogle(): Promise<AppUser | null>{
-    const provider = new GoogleAuthProvider();
+export async function authWithGoogle(): Promise<AppUser | null> {
+    await setPersistence(auth, indexedDBLocalPersistence); // Remove for sensitive Data applications
     let oauth, credential = null;
     try {
-        const auth = getAuth(firebaseApp);
-        await setPersistence(auth, browserSessionPersistence) // Remove for sensitive Data applications
-        credential = await signInWithPopup(auth, provider);
+        credential = await signInWithPopup(auth, new GoogleAuthProvider());
         oauth = GoogleAuthProvider.credentialFromResult(credential);
+        userSubject.next(await getAppUser(credential.user));
     } catch (error: any) {
         console.warn(error);
         oauth = GoogleAuthProvider.credentialFromError(error);
     }
-    sessionSubject.next(credential);
-    authSubject.next(oauth || null);
-    userSubject.next(credential && await getAppUser(credential));
+    return userSubject.getValue();
+}
+
+export async function restoreSession() {
+    await setPersistence(auth, indexedDBLocalPersistence); // Remove for sensitive Data applications
+    if(auth.currentUser){
+        userSubject.next(await getAppUser(auth.currentUser));
+    }
     return userSubject.getValue();
 }
 
 export async function logOut() {
-    sessionSubject.next(null);
-    authSubject.next(null);
+    await signOut(auth);
     userSubject.next(null);
+    return userSubject.getValue();
 }
 
-async function getAppUser({user}: UserCredential): Promise<AppUser>{
+async function getAppUser(user: User): Promise<AppUser> {
     const response = await fetch(`/api/user`, {
         method: 'POST',
-        body: JSON.stringify({uid: user.uid, name: user.displayName}),
-        headers: {"Content-Type": "application/json"}
+        body: JSON.stringify({ uid: user.uid, name: user.displayName }),
+        headers: { "Content-Type": "application/json" }
     });
     return response.status === 200 ? response.json() : null;
-
 }

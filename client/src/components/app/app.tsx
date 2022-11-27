@@ -1,11 +1,11 @@
-import './App.css';
-import { googleAnalytics } from "./state/firebase";
-import { authWithGoogle } from "./lib/login";
+import './app.css';
+import { googleAnalytics } from "../../state/firebase";
+import { authWithGoogle, restoreSession } from "../../lib/login";
 import { Button, AppBar, Toolbar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import Router from './pages/router';
+import Router from '../../pages/router';
 import { useState } from 'react';
-import { userSubject } from './state/session';
+import { userSubject } from '../../state/session';
 import { skip } from 'rxjs';
 
 function App() {
